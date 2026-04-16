@@ -541,16 +541,16 @@ footer {
     </div>
   </div>
   <div class="photo-grid">
-    <div class="ph ph-1"><img src="./public/images/image_02.jpeg" alt="Cowgirl"></div>
-    <div class="ph ph-2"><img src="./public/images/image_03.jpeg" alt="Sunglasses"></div>
-    <div class="ph ph-3"><img src="./public/images/image_04.jpeg" alt="Birthday Princess"></div>
-    <div class="ph ph-4"><img src="./public/images/image_05.jpeg" alt="Seated"></div>
-    <div class="ph ph-5"><img src="./public/images/image_06.jpeg" alt="Growth Ruler"></div>
-    <div class="ph ph-6"><img src="./public/images/image_07.jpeg" alt="Floor Pose"></div>
-    <div class="ph ph-7"><img src="./public/images/image_08.jpeg" alt="5 Years Old"></div>
-    <div class="ph ph-8"><img src="./public/images/image_09.jpeg" alt="Birthday Close-up"></div>
-    <div class="ph ph-9"><img src="./public/images/image_10.jpeg" alt="Kia Sign"></div>
-    <div class="ph ph-10"><img src="./public/images/image_11.jpeg" alt="Holiday"></div>
+    <div class="ph ph-1"><img src="./public/images/image_02.jpeg" alt="Cowgirl" class="lb-trigger"></div>
+    <div class="ph ph-2"><img src="./public/images/image_03.jpeg" alt="Sunglasses" class="lb-trigger"></div>
+    <div class="ph ph-3"><img src="./public/images/image_04.jpeg" alt="Birthday Princess" class="lb-trigger"></div>
+    <div class="ph ph-4"><img src="./public/images/image_05.jpeg" alt="Seated" class="lb-trigger"></div>
+    <div class="ph ph-5"><img src="./public/images/image_06.jpeg" alt="Growth Ruler" class="lb-trigger"></div>
+    <div class="ph ph-6"><img src="./public/images/image_07.jpeg" alt="Floor Pose" class="lb-trigger"></div>
+    <div class="ph ph-7"><img src="./public/images/image_08.jpeg" alt="5 Years Old" class="lb-trigger"></div>
+    <div class="ph ph-8"><img src="./public/images/image_09.jpeg" alt="Birthday Close-up" class="lb-trigger"></div>
+    <div class="ph ph-9"><img src="./public/images/image_10.jpeg" alt="Kia Sign" class="lb-trigger"></div>
+    <div class="ph ph-10"><img src="./public/images/image_11.jpeg" alt="Holiday" class="lb-trigger"></div>
   </div>
 </section>
 
@@ -625,6 +625,56 @@ footer {
   <div class="footer-name">MiAmor Scharschmidt</div>
   <div class="footer-copy">Child Modeling Portfolio · Connecticut · 2025</div>
 </footer>
+
+
+<!-- LIGHTBOX -->
+<div id="lb-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;">
+  <button id="lb-prev" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);background:none;border:none;color:#fff;font-size:2.5rem;cursor:pointer;padding:12px;line-height:1;opacity:.8;">&#8592;</button>
+  <img id="lb-img" src="" alt="" style="max-width:90vw;max-height:90vh;object-fit:contain;border-radius:4px;box-shadow:0 8px 60px rgba(0,0,0,.6);">
+  <button id="lb-next" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);background:none;border:none;color:#fff;font-size:2.5rem;cursor:pointer;padding:12px;line-height:1;opacity:.8;">&#8594;</button>
+  <button id="lb-close" style="position:absolute;top:20px;right:24px;background:none;border:none;color:#fff;font-size:2rem;cursor:pointer;opacity:.8;line-height:1;">&times;</button>
+</div>
+<style>
+  .lb-trigger { cursor: zoom-in; }
+  #lb-overlay { display: none; }
+  #lb-overlay.open { display: flex !important; }
+  #lb-prev:hover, #lb-next:hover, #lb-close:hover { opacity: 1; }
+</style>
+<script>
+  const images = Array.from(document.querySelectorAll('.lb-trigger'));
+  const overlay = document.getElementById('lb-overlay');
+  const lbImg   = document.getElementById('lb-img');
+  let current   = 0;
+
+  function open(idx) {
+    current = idx;
+    lbImg.src = images[idx].src;
+    lbImg.alt = images[idx].alt;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function close() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function step(dir) {
+    current = (current + dir + images.length) % images.length;
+    lbImg.src = images[current].src;
+    lbImg.alt = images[current].alt;
+  }
+
+  images.forEach((img, i) => img.addEventListener('click', () => open(i)));
+  document.getElementById('lb-close').addEventListener('click', e => { e.stopPropagation(); close(); });
+  document.getElementById('lb-prev').addEventListener('click', e => { e.stopPropagation(); step(-1); });
+  document.getElementById('lb-next').addEventListener('click', e => { e.stopPropagation(); step(1); });
+  overlay.addEventListener('click', close);
+  document.addEventListener('keydown', e => {
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft')  step(-1);
+    if (e.key === 'ArrowRight') step(1);
+  });
+</script>
 
 </body>
 </html>
